@@ -374,7 +374,8 @@ cityInput.addEventListener('input', (e) => {
     // Kullanıcı yazmayı bitirene kadar bekleyip, API'yi yormamak için 400ms Debounce
     debounceTimer = setTimeout(async () => {
         try {
-            const res = await fetch(`/api/search?q=${encodeURIComponent(val)}`);
+            const API_KEY = 'f2a9f0ff129360cc4467b9953ddd0df2';
+const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(val)}&limit=5&appid=${API_KEY}`);
             const data = await res.json();
             
             if (data && data.length > 0) {
@@ -470,26 +471,42 @@ async function getWeatherData(params, pushHistory = true) {
 
     try {
 
-        let url = '/api/weather?';
-        if (params.city) url += `city=${params.city}`;
-        else if (params.lat && params.lon) url += `lat=${params.lat}&lon=${params.lon}`;
+        const API_KEY = 'f2a9f0ff129360cc4467b9953ddd0df2';
+        let lat = params.lat;
+        let lon = params.lon;
+        let resolvedCityName = params.city;
 
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('Geçerli bir şehir veya konum bulunamadı. Lütfen tekrar deneyin.');
-            } else if (response.status === 401) {
-                throw new Error('API Anahtarınız geçersiz veya henüz aktifleşmemiş.');
+        // Eğer sadece şehir ismi geldiyse, önce koordinatlarını bul
+        if (params.city && (!lat || !lon)) {
+            const geoRes = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${params.city}&limit=1&appid=${API_KEY}`);
+            const geoData = await geoRes.json();
+            if (geoData.length > 0) {
+                lat = geoData[0].lat;
+                lon = geoData[0].lon;
+                resolvedCityName = geoData[0].name;
             } else {
-                throw new Error('Veriler alınırken bir sorun oluştu. (Hata Kodu: ' + response.status + ')');
+                throw new Error('Geçerli bir şehir bulunamadı.');
             }
         }
 
-        const data = await response.json();
+        // 3 Veriyi aynı anda OpenWeather'dan çekiyoruz
+        const [currentRes, forecastRes, aqiRes] = await Promise.all([
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=${uiPrefs.lang}&appid=${API_KEY}`),
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=${uiPrefs.lang}&appid=${API_KEY}`),
+            fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+        ]);
+
+        if (!currentRes.ok) throw new Error('API Anahtarı geçersiz veya hava durumu verisi alınamadı.');
+
+        // Vercel'in yaptığı paketlemeyi biz burada tarayıcıda yapıyoruz
+        const data = {
+            current: await currentRes.json(),
+            forecast: await forecastRes.json(),
+            airQuality: await aqiRes.json()
+        };
         
         // Reverse Geocoding: Eğer veride bir isim varsa al, yoksa parametreden çek
-        const resolvedCityName = data.current.name || params.city || 'Bilinmeyen Konum';
+        resolvedCityName = data.current.name || params.city || 'Bilinmeyen Konum';
 
         // URL ve Arama Çubuğu Senkronizasyonu
         if (pushHistory && resolvedCityName !== 'Bilinmeyen Konum') {
@@ -1670,15 +1687,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mapContainer && typeof L !== 'undefined') {
             // Hot-reload yapıldığında haritanın tekrar başlatılıp çökmesini engelle
             if (!window.weatherMapInstance) {
-                const tempLayer = L.tileLayer('/api/tiles/temp_new/{z}/{x}/{y}', {
+                const API_KEY = 'f2a9f0ff129360cc4467b9953ddd0df2';
+                const tempLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                     maxZoom: 19, opacity: 0.6, attribution: '&copy; OpenWeatherMap'
                 });
 
-                const rainLayer = L.tileLayer('/api/tiles/precipitation_new/{z}/{x}/{y}', {
+                const rainLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                     maxZoom: 19, opacity: 0.8, attribution: '&copy; OpenWeatherMap'
                 });
 
-                const cloudLayer = L.tileLayer('/api/tiles/clouds_new/{z}/{x}/{y}', {
+                const cloudLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                     maxZoom: 19, opacity: 0.7, attribution: '&copy; OpenWeatherMap'
                 });
 
