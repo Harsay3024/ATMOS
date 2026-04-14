@@ -1,18 +1,60 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <!-- Temel Meta Etiketleri -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="language" content="tr_TR">
+    <meta name="distribution" content="global">
+    
+    <!-- SEO Meta Etiketleri -->
+    <title>ATMOS - Türkiye'nin En İyi Hava Durumu Uygulaması | Anlık Tahmin</title>
+    <meta name="description" content="ATMOS ile Türkiye'nin her yerinde anlık hava durumu, saatlik tahmin, 5 günlük hava tahmini ve gerçek zamanlı hava kalitesi indeksini kontrol edin. OpenWeather API ile en güncel veriler.">
+    <meta name="keywords" content="hava durumu, Türkiye hava durumu, anlık hava, hava tahmineri, meteoroloji, hava kalitesi, AQI, hava indeksi, saatlik tahmin, 5 günlük tahmin, İstanbul hava durumu, Ankara hava durumu, İzmir hava durumu, Konya hava durumu, Bursa hava durumu, Antalya hava durumu, Adana hava durumu, Gaziantep hava durumu, Diyarbakır hava durumu, Kayseri hava durumu, hava durumu uygulaması, online hava durumu, gerçek zamanlı hava, iklim verileri, sıcaklık, nem, rüzgar hızı, yağış tahmini, UV indeksi">
+    <meta name="author" content="Harun Sayar">
+    <meta name="creator" content="Harun Sayar">
+    <meta name="publisher" content="ATMOS Weather">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://atmosweather.com.tr/">
+    
+    <!-- Open Graph (OG) Meta Etiketleri - Sosyal Medya Önizlemesi -->
+    <meta property="og:site_name" content="ATMOS Weather">
+    <meta property="og:title" content="ATMOS - Türkiye'nin En İyi Hava Durumu Uygulaması">
+    <meta property="og:description" content="Anlık hava durumu, saatlik ve 5 günlük tahmin, hava kalitesi indeksi ve interaktif harita ile Türkiye'deki hava koşullarını takip edin.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://atmosweather.com.tr/">
+    <meta property="og:image" content="https://atmosweather.com.tr/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:locale" content="tr_TR">
+    
+    <!-- Twitter Card Meta Etiketleri -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ATMOS - Türkiye'nin Hava Durumu Uygulaması">
+    <meta name="twitter:description" content="Anlık hava durumu, saatlik tahmin, 5 günlük hava tahmini ve hava kalitesi indeksini kontrol edin.">
+    <meta name="twitter:image" content="https://atmosweather.com.tr/assets/twitter-image.png">
+    <meta name="twitter:creator" content="@AtmosWeather">
+    <meta name="twitter:domain" content="https://atmosweather.com.tr">
+    
+    <!-- Ek Meta Etiketleri -->
     <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ATMOS Weather">
+    <meta name="application-name" content="ATMOS Weather">
+    <meta name="msapplication-TileColor" content="#3b82f6">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA & Manifest -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="/favicon.png" type="image/png">
-    <meta name="description" content="Gökyüzü Rehberi ile anlık, saatlik ve 5 günlük hava durumu tahminlerini, hava kalitesi (AQI) ve radar haritasını canlı takip edin.">
-    <meta name="keywords" content="hava durumu, güncel hava, radar, hava kalitesi, meteoroloji, saatlik tahmin">
-    <meta property="og:title" content="Gökyüzü Rehberi - Profesyonel Hava Durumu">
-    <meta property="og:description" content="Dünyanın her yeri için anlık, saatlik ve 5 günlük hava durumu tahmini ile interaktif radar haritası.">
-    <meta property="og:image" content="https://openweathermap.org/img/wn/01d@4x.png">
-    <meta property="og:type" content="website">
-    <title>ATMOS - Akıllı Hava Durumu</title>
+    <link rel="apple-touch-icon" href="/favicon.png">
     
     <!-- Dış kaynaklar için DNS önceden çözümleme (Erken Yükleme) -->
     <link rel="preconnect" href="https://openweathermap.org">
