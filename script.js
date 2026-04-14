@@ -1890,4 +1890,4 @@ function generateSmartAdvice(hourlyData) {
     }
 
     return null; // Tavsiye yoksa null döndür
-}
+}//tetikleme
