@@ -490,6 +490,7 @@ async function getWeatherData(params, pushHistory = true) {
         }
 
         // 3 Veriyi aynı anda OpenWeather'dan çekiyoruz
+        
         const [currentRes, forecastRes, aqiRes] = await Promise.all([
             fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=${uiPrefs.lang}&appid=${API_KEY}`),
             fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=${uiPrefs.lang}&appid=${API_KEY}`),
