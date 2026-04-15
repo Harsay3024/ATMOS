@@ -30,7 +30,6 @@
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 100vw; /* Tüm elemanların ekranı genişletmesini kesin olarak engeller */
 }
 
 html {
@@ -277,6 +276,7 @@ body {
     max-width: 1100px; /* Geniş profesyonel görünüm */
     margin: 0 auto;
     padding: 0 20px 40px;
+    overflow: hidden; /* Taşmayı engelle */
 }
 
 /* --- Sekme (Tab) Geçiş Animasyonları --- */
@@ -582,6 +582,14 @@ body {
     flex-direction: column;
     position: sticky;
     top: 90px; /* Liste uzun olsa da sağdaki grafik aşağı kayarken ekranda sabit kalır */
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .forecast-right-col {
+        position: static;
+        top: auto;
+    }
 }
 .chart-wrapper {
     background: rgba(255, 255, 255, 0.3); /* Biraz daha şeffaf */
@@ -595,6 +603,8 @@ body {
     max-height: 420px;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    overflow: hidden;
 }
 [data-theme="dark"] .chart-wrapper {
     background: rgba(31, 41, 55, 0.3);
@@ -1334,6 +1344,15 @@ body {
 @media (max-width: 900px) {
     .forecast-split-layout {
         grid-template-columns: 1fr; /* Mobilde alt alta geçer */
+        gap: 20px;
+    }
+    .forecast-right-col {
+        width: 100%;
+        position: static;
+    }
+    .chart-wrapper {
+        height: auto;
+        max-height: none;
     }
     .weather-details {
         grid-template-columns: repeat(3, 1fr);
