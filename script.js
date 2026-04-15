@@ -1567,7 +1567,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetSec.classList.add('active-tab');
                 // Harita sekmesi açıldığında Leaflet'in render düzeltmesi için:
                 if (targetId === 'weatherResult' && window.weatherMapInstance) {
-                    setTimeout(() => { window.weatherMapInstance.invalidateSize(); }, 100);
+                    // Birden fazla delay ile invalidateSize çağırarak CSS animasyonlarının bitmesini beklet
+                    setTimeout(() => { window.weatherMapInstance.invalidateSize(); }, 50);
+                    setTimeout(() => { window.weatherMapInstance.invalidateSize(); }, 200);
+                    setTimeout(() => { window.weatherMapInstance.invalidateSize(); }, 450);
                 }
                 // YENİ EKLENEN: Grafik sekmesi açıldığında Chart.js'in render (0px height) düzeltmesi için:
                 if (targetId === 'chartContainer' && window.weatherChart) {
@@ -1687,6 +1690,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 updateBaseMapLayer();
 
+                // --- ResizeObserver: Container boyutu değişince harita kendini ayarla ---
+                const mapContainer = document.getElementById('weatherMap');
+                if (mapContainer && typeof ResizeObserver !== 'undefined') {
+                    const resizeObserver = new ResizeObserver(() => {
+                        if (window.weatherMapInstance) {
+                            window.weatherMapInstance.invalidateSize();
+                        }
+                    });
+                    resizeObserver.observe(mapContainer);
+                }
+
                 // Katman Kontrol Paneli
                 const overlayMaps = {
                     [`🌡️ <span data-i18n="mapTemp">${getT('mapTemp')}</span>`]: tempLayer,
@@ -1775,6 +1789,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
         console.error("Harita yüklenirken hata oluştu:", e);
     }
+
+    // --- Pencere Resize Event: Harita kendini ayarlasın ---
+    window.addEventListener('resize', () => {
+        if (window.weatherMapInstance) {
+            setTimeout(() => {
+                window.weatherMapInstance.invalidateSize();
+            }, 100);
+        }
+    });
 });
 
 // --- İletişim Formu Gönderme ve Yüklenme Animasyonu ---
